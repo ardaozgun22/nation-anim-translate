@@ -20,7 +20,6 @@ const translate = async (text, sourceLang, targetLang, res) => {
         res.json({
             text: response.data.data.translations[0].translatedText
         });
-        console.log('Çevrilen metin:', response.data.data.translations[0].translatedText);
     } catch (error) {
         console.error('Çeviri hatası:', error.response ? error.response.data : error.message);
     }
