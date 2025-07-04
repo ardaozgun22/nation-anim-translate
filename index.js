@@ -1,33 +1,40 @@
 const express = require('express');
 const cors = require('cors');
-const axios = require('axios');
 const app = express();
 const port = process.env.PORT || 3000;
+
+const googleTranslate = require('@vitalets/google-translate-api');
 
 app.use(cors());
 app.use(express.json());
 
+// Yeni translate fonksiyonu
 const translate = async (text, sourceLang, targetLang, res) => {
     try {
-        const response = await axios.post('https://translation.googleapis.com/language/translate/v2', null, {
-            params: {
-                q: text,
-                source: sourceLang,
-                target: targetLang,
-                key: 'AIzaSyByuw5Nusr9di1Gbk9WqjJ-hE9R5frDziA'
-            }
+        const result = await googleTranslate(text, {
+            from: sourceLang || 'auto',
+            to: targetLang
         });
         res.json({
-            text: response.data.data.translations[0].translatedText
+            text: result.text
         });
     } catch (error) {
-        console.error('Çeviri hatası:', error.response ? error.response.data : error.message);
+        console.error('Çeviri hatası:', error);
+        res.status(500).json({ error: 'Translation failed' });
     }
 }
 
+// Endpoint
 app.post('/translate', async (req, res) => {
     const { text, sourceLang, targetLang } = req.body;
+
+    if (!text || !targetLang) {
+        return res.status(400).json({ error: 'Missing text or targetLang' });
+    }
+
     await translate(text, sourceLang, targetLang, res);
 });
 
-app.listen(port, () => {});
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+});
