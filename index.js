@@ -14,11 +14,7 @@ const translate = async (text, sourceLang, targetLang, res) => {
       source: sourceLang,
       target: targetLang,
       format: 'text'
-    });
-   console.log({
-  data: response.data,
-  status: response.status
-});
+    }, {headers: {'Content-Type': 'application/json'}});
     res.json({
       text: response.data.translatedText
     });
