@@ -8,25 +8,22 @@ app.use(cors());
 app.use(express.json());
 
 const translate = async (text, sourceLang, targetLang, res) => {
-  try {
-    const response = await axios.post('https://libretranslate.de/translate', {
-      q: text,
-      source: sourceLang,
-      target: targetLang,
-      format: 'text'
-    }, {headers: {'Content-Type': 'application/json'}});
-    console.log({
-      data: response.data,
-      status: response.status
-    });
-    res.json({
-      text: response.data.translatedText
-    });
-  } catch (error) {
-    console.error('Çeviri hatası:', error.response ? error.response.data : error.message);
-    res.status(500).json({ error: 'Translation failed' });
-  }
-};
+    try {
+        const response = await axios.post('https://translation.googleapis.com/language/translate/v2', null, {
+            params: {
+                q: text,
+                source: sourceLang,
+                target: targetLang,
+                key: 'AIzaSyByuw5Nusr9di1Gbk9WqjJ-hE9R5frDziA'
+            }
+        });
+        res.json({
+            text: response.data.data.translations[0].translatedText
+        });
+    } catch (error) {
+        console.error('Çeviri hatası:', error.response ? error.response.data : error.message);
+    }
+}
 
 app.post('/translate', async (req, res) => {
     const { text, sourceLang, targetLang } = req.body;
