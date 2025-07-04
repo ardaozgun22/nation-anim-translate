@@ -13,6 +13,6 @@
     "axios": "^1.7.2",
     "cors": "^2.8.5",
     "express": "^4.19.2",
-    "@vitalets/google-translate-api": "^8.0.5"
+    "@vitalets/google-translate-api": "^8.0.0"
   }
 }
